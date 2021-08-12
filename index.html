@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h4>NASA API</h4>      
+      <hr>
+      <p>Longitude:</p>
+      <input type="number" id="lon" name="lon" value="-95.33" step="0.01" class="form-control" />
+
+      <p>Latitude:</p>
+      <input type="number" id="lat" name="lat" value="29.78" step="0.01" class="form-control" />   
+      
+      <p>Date:</p>
+      <input type="date" id="date" name="date" value="2018-01-01" class="form-control" />         
+
+      <p>Zoom:</p>
+      <input type="range" id="dim" name="dim" min="0" max="1" step="0.01" value="0.15"  class="form-control" />               
+
+      <button id="LoadView">Load View</button>
+      <script>
+        /** 
+         * Account Email: calderon.m@live.com
+         * Account ID: 2cbb8ca7-ba16-4dc6-b422-3eed46b6c669
+         * */
+
+        const key = "DEMO_KEY";
+
+        $(document).ready(function() {
+            
+            /**
+            $("#LoadView").click(function(){
+                alert('Probamos');
+                $.get( "https://api.nasa.gov/planetary/earth/imagery",
+                { 
+                    lon :$("#lon").val(), 
+                    lat :$("#lat").val(), 
+                    date :$("#date").val(),
+                    dim :$("#dim").val(),
+                    api_key : key
+                }, 
+                function(response) 
+                {
+                    if(response == false)                             
+                        alert("Error")
+                    else
+                    {
+                        const obj = JSON.parse(response);
+                        alert(response);
+                    }                        
+                });
+            });
+            **/
+            
+            $("#LoadView").click(function(){
+
+                $.get( "https://api.nasa.gov/planetary/earth/assets?"+
+                        "lon="+$("#lon").val()+
+                        "&lat="+$("#lat").val()+
+                        "&date="+$("#date").val()+
+                        "&dim="+$("#dim").val()+
+                        "&api_key="+key,                 
+                function(data) {                                        
+                    $("#Rdate").text(data.date);
+                    $("#Rid").text(data.id);
+                    $("#RDataset").text(data.resource.dataset);
+                    $("#Rplanet").text(data.resource.planet);
+                    $("#Rservice_version").text(data.service_version);
+                    $("#Rurl").attr("src",data.url);
+                });
+            });
+        });
+
+      </script>
+    </div>
+
+    <div class="col-sm-9">
+      <h4><small>Earth Images</small></h4>
+      <hr>
+      <h2>Using NASA's API</h2>
+      <div class="d-none" id="Fillme" >
+        <table class="table table-bordered">
+            <tr>
+                <th style="width: 25%">Date:</th>
+                <th><label id="Rdate"></label></th>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <th><label id="Rid"></label></th>
+            </tr>         
+            <tr>
+                <th>Resource</th>
+                <th><p>Dataset:</p>
+                    <label id="RDataset"></label>
+                    <p>Planet:</p>
+                    <label id="Rplanet"></label>
+                </th>
+            </tr>                        
+            <tr>
+                <th>Service Version</th>
+                <th><label id="Rservice_version"></label></th>
+            </tr> 
+            <tr>
+                <td colspan="2">
+                    <img id="Rurl" src="">
+                </td>
+            </tr>
+            
+        </table>
+      </div>      
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
